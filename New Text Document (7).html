@@ -1,0 +1,293 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Open Access Sci-Tech Library</title>
+    <style>
+        :root {
+            --primary: #0f172a;
+            --accent-blue: #3b82f6;
+            --accent-green: #10b981;
+            --bg: #f8fafc;
+            --white: #ffffff;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, sans-serif;
+            background-color: var(--bg);
+            margin: 0;
+        }
+
+        /* --- Login Overlay --- */
+        #login-overlay {
+            position: fixed;
+            top: 0; left: 0; width: 100%; height: 100%;
+            background: linear-gradient(135deg, #0f172a 0%, #1e293b 100%);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            z-index: 1000;
+        }
+
+        .login-card {
+            background: var(--white);
+            padding: 40px;
+            border-radius: 16px;
+            width: 350px;
+            text-align: center;
+            box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.5);
+        }
+
+        .login-card h2 { margin-bottom: 10px; color: var(--primary); }
+        .login-card p { font-size: 14px; color: #64748b; margin-bottom: 25px; }
+
+        input {
+            width: 100%;
+            padding: 14px;
+            margin: 10px 0;
+            border: 1px solid #e2e8f0;
+            border-radius: 8px;
+            box-sizing: border-box;
+            outline: none;
+        }
+
+        .btn-login {
+            background: var(--accent-blue);
+            color: white;
+            border: none;
+            width: 100%;
+            padding: 14px;
+            border-radius: 8px;
+            font-weight: bold;
+            cursor: pointer;
+            font-size: 16px;
+        }
+
+        /* --- Dashboard --- */
+        #main-dashboard { display: none; }
+
+        header {
+            background: var(--primary);
+            color: white;
+            padding: 15px 5%;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .search-section {
+            background: var(--white);
+            padding: 30px 5%;
+            text-align: center;
+            box-shadow: 0 4px 6px -1px rgba(0,0,0,0.05);
+        }
+
+        #searchInput {
+            width: 70%;
+            padding: 15px 25px;
+            border: 2px solid #f1f5f9;
+            border-radius: 50px;
+            background: #f1f5f9;
+            font-size: 16px;
+            outline: none;
+        }
+
+        .container {
+            padding: 40px 5%;
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+            gap: 25px;
+        }
+
+        /* --- Book Card --- */
+        .book-card {
+            background: var(--white);
+            border-radius: 12px;
+            padding: 20px;
+            box-shadow: 0 4px 6px rgba(0,0,0,0.05);
+            display: flex;
+            flex-direction: column;
+            transition: 0.3s ease;
+        }
+
+        .book-card:hover { transform: translateY(-5px); }
+
+        .tag {
+            font-size: 11px;
+            font-weight: bold;
+            padding: 5px 12px;
+            border-radius: 6px;
+            text-transform: uppercase;
+            width: fit-content;
+            margin-bottom: 12px;
+        }
+
+        .tag-borrow { background: #dcfce7; color: #166534; }
+        .tag-buy { background: #dbeafe; color: #1e40af; }
+
+        .book-title { font-size: 18px; margin-bottom: 8px; color: var(--primary); }
+        .book-author { color: #64748b; font-size: 14px; flex-grow: 1; margin-bottom: 20px; }
+
+        .btn-action {
+            padding: 12px;
+            border: none;
+            border-radius: 8px;
+            font-weight: bold;
+            cursor: pointer;
+        }
+
+        .btn-borrow { background: var(--accent-green); color: white; }
+        .btn-buy { background: var(--accent-blue); color: white; }
+    </style>
+</head>
+<body>
+
+    <!-- LOGIN SCREEN -->
+    <div id="login-overlay">
+        <div class="login-card">
+            <h2>Welcome Back</h2>
+            <p>Enter any details to access the library</p>
+            <input type="text" id="userInput" placeholder="Any Username">
+            <input type="password" id="passInput" placeholder="Any Password">
+            <button class="btn-login" onclick="handleLogin()">Enter Library</button>
+        </div>
+    </div>
+
+    <!-- MAIN INTERFACE -->
+    <div id="main-dashboard">
+        <header>
+            <h2 style="margin:0">?? Library Portal</h2>
+            <button onclick="location.reload()" style="background:none; border:1px solid white; color:white; padding:5px 10px; cursor:pointer; border-radius:6px">Logout</button>
+        </header>
+
+        <div class="search-section">
+            <input type="text" id="searchInput" onkeyup="search()" placeholder="Search library...">
+        </div>
+
+        <div class="container">
+            <!-- 16 Scientific/Programming Books -->
+            <div class="book-card" data-title="Deep Learning">
+                <span class="tag tag-buy">Buy - $45</span>
+                <h3 class="book-title">Deep Learning with Python</h3>
+                <p class="book-author">Francois Chollet</p>
+                <button class="btn-action btn-buy" onclick="alert('Added to cart')">Buy Now</button>
+            </div>
+            <div class="book-card" data-title="Operating Systems">
+                <span class="tag tag-borrow">Borrow</span>
+                <h3 class="book-title">OS Concepts</h3>
+                <p class="book-author">Silberschatz</p>
+                <button class="btn-action btn-borrow" onclick="alert('Borrowed!')">Borrow</button>
+            </div>
+            <div class="book-card" data-title="Clean Code">
+                <span class="tag tag-buy">Buy - $35</span>
+                <h3 class="book-title">Clean Code</h3>
+                <p class="book-author">Robert Martin</p>
+                <button class="btn-action btn-buy" onclick="alert('Added to cart')">Buy Now</button>
+            </div>
+            <div class="book-card" data-title="Algorithms">
+                <span class="tag tag-borrow">Borrow</span>
+                <h3 class="book-title">Intro to Algorithms</h3>
+                <p class="book-author">Cormen et al.</p>
+                <button class="btn-action btn-borrow" onclick="alert('Borrowed!')">Borrow</button>
+            </div>
+            <div class="book-card" data-title="Quantum Physics">
+                <span class="tag tag-buy">Buy - $50</span>
+                <h3 class="book-title">The Theoretical Minimum</h3>
+                <p class="book-author">Leonard Susskind</p>
+                <button class="btn-action btn-buy" onclick="alert('Added to cart')">Buy Now</button>
+            </div>
+            <div class="book-card" data-title="Linear Algebra">
+                <span class="tag tag-borrow">Borrow</span>
+                <h3 class="book-title">Linear Algebra</h3>
+                <p class="book-author">Gilbert Strang</p>
+                <button class="btn-action btn-borrow" onclick="alert('Borrowed!')">Borrow</button>
+            </div>
+            <div class="book-card" data-title="React Development">
+                <span class="tag tag-buy">Buy - $40</span>
+                <h3 class="book-title">React Design Patterns</h3>
+                <p class="book-author">Michele Bertoli</p>
+                <button class="btn-action btn-buy" onclick="alert('Added to cart')">Buy Now</button>
+            </div>
+            <div class="book-card" data-title="Database Systems">
+                <span class="tag tag-borrow">Borrow</span>
+                <h3 class="book-title">DB Essentials</h3>
+                <p class="book-author">Korth & Sudarshan</p>
+                <button class="btn-action btn-borrow" onclick="alert('Borrowed!')">Borrow</button>
+            </div>
+            <div class="book-card" data-title="Cybersecurity">
+                <span class="tag tag-buy">Buy - $55</span>
+                <h3 class="book-title">Blue Team Handbook</h3>
+                <p class="book-author">Don Murdoch</p>
+                <button class="btn-action btn-buy" onclick="alert('Added to cart')">Buy Now</button>
+            </div>
+            <div class="book-card" data-title="Networking">
+                <span class="tag tag-borrow">Borrow</span>
+                <h3 class="book-title">Computer Networking</h3>
+                <p class="book-author">Kurose & Ross</p>
+                <button class="btn-action btn-borrow" onclick="alert('Borrowed!')">Borrow</button>
+            </div>
+            <div class="book-card" data-title="C++ Programming">
+                <span class="tag tag-buy">Buy - $60</span>
+                <h3 class="book-title">The C++ Language</h3>
+                <p class="book-author">Bjarne Stroustrup</p>
+                <button class="btn-action btn-buy" onclick="alert('Added to cart')">Buy Now</button>
+            </div>
+            <div class="book-card" data-title="System Analysis">
+                <span class="tag tag-borrow">Borrow</span>
+                <h3 class="book-title">Systems Analysis</h3>
+                <p class="book-author">Kendall & Kendall</p>
+                <button class="btn-action btn-borrow" onclick="alert('Borrowed!')">Borrow</button>
+            </div>
+            <div class="book-card" data-title="AI">
+                <span class="tag tag-borrow">Borrow</span>
+                <h3 class="book-title">AI: A Modern Approach</h3>
+                <p class="book-author">Stuart Russell</p>
+                <button class="btn-action btn-borrow" onclick="alert('Borrowed!')">Borrow</button>
+            </div>
+            <div class="book-card" data-title="Discrete Math">
+                <span class="tag tag-buy">Buy - $30</span>
+                <h3 class="book-title">Discrete Mathematics</h3>
+                <p class="book-author">Kenneth Rosen</p>
+                <button class="btn-action btn-buy" onclick="alert('Added to cart')">Buy Now</button>
+            </div>
+            <div class="book-card" data-title="Python Tips">
+                <span class="tag tag-borrow">Borrow</span>
+                <h3 class="book-title">Fluent Python</h3>
+                <p class="book-author">Luciano Ramalho</p>
+                <button class="btn-action btn-borrow" onclick="alert('Borrowed!')">Borrow</button>
+            </div>
+            <div class="book-card" data-title="Astronomy">
+                <span class="tag tag-buy">Buy - $25</span>
+                <h3 class="book-title">Cosmos</h3>
+                <p class="book-author">Carl Sagan</p>
+                <button class="btn-action btn-buy" onclick="alert('Added to cart')">Buy Now</button>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        function handleLogin() {
+            const user = document.getElementById('userInput').value;
+            const pass = document.getElementById('passInput').value;
+
+            // ‘—ÿ »”Ìÿ: ·Ê «·Œ«‰«  „‘ ›«÷Ì…° ÌœŒ· ›Ê—«
+            if (user.trim() !== "" && pass.trim() !== "") {
+                document.getElementById('login-overlay').style.display = 'none';
+                document.getElementById('main-dashboard').style.display = 'block';
+            } else {
+                alert("Please enter any username and password!");
+            }
+        }
+
+        function search() {
+            let input = document.getElementById('searchInput').value.toLowerCase();
+            let cards = document.getElementsByClassName('book-card');
+            for (let card of cards) {
+                let title = card.getAttribute('data-title').toLowerCase();
+                card.style.display = title.includes(input) ? "flex" : "none";
+            }
+        }
+    </script>
+</body>
+</html>
